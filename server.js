@@ -24,18 +24,38 @@ const db = mysql.createConnection(
 
 // return all data from candidates table
 // query() method runs the SQL query and executes the callback with all the resulting rows that match
-// db.query(`SELECT * FROM candidates`, (err, rows) => {
-//     // responses captured as err (no errors returns 'null') and rows (db query response)
-//     console.log(rows);
-// });
+app.get('/api/candidates', (req, res) => {
+    const sql = `SELECT * FROM candidates`;
+
+    db.query(sql, (err, rows) => {
+        if (err) {
+            // 500 = server error, return statement to exit call
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: 'Success',
+            data: rows
+        });
+    });
+});
 
 // // return single record from candidates table
-// db.query(`SELECT * FROM candidates WHERE id = 10`, (err, row) => {
-//     if (err) {
-//         console.log(err);
-//     }
-//     console.log(row);
-// });
+app.get('/api/candidate/:id', (req, res) => {
+    const sql = `SELECT * FROM candidates WHERE id = ?`;
+    const params = [req.params.id];
+
+    db.query(sql, params, (err, row) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: 'Success',
+            data: row
+        });
+    });
+});
 
 // // DELETE a candidate from table
 // // ? denotes a placeholder, making this a prepared statement
