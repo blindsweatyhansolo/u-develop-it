@@ -29,6 +29,14 @@ db.query(`SELECT * FROM candidates`, (err, rows) => {
     console.log(rows);
 });
 
+// return single record from candidates table
+db.query(`SELECT * FROM candidates WHERE id = 10`, (err, row) => {
+    if (err) {
+        console.log(err);
+    }
+    console.log(row);
+});
+
 // (catchall route) handle unsupported user requests (404 Not Found)
 app.use((req, res) => {
     res.status(404).end();
