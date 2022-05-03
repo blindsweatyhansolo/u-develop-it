@@ -22,7 +22,14 @@ const db = mysql.createConnection(
     console.log('Connected to the election database.')
 );
 
-// handle unsupported user requests (Not Found)
+// return all data from candidates table
+// query() method runs the SQL query and executes the callback with all the resulting rows that match
+db.query(`SELECT * FROM candidates`, (err, rows) => {
+    // responses captured as err (no errors returns 'null') and rows (db query response)
+    console.log(rows);
+});
+
+// (catchall route) handle unsupported user requests (404 Not Found)
 app.use((req, res) => {
     res.status(404).end();
 });
