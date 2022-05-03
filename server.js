@@ -40,7 +40,7 @@ app.get('/api/candidates', (req, res) => {
     });
 });
 
-// // return single record from candidates table
+// return single record from candidates table
 app.get('/api/candidate/:id', (req, res) => {
     const sql = `SELECT * FROM candidates WHERE id = ?`;
     const params = [req.params.id];
@@ -54,6 +54,29 @@ app.get('/api/candidate/:id', (req, res) => {
             message: 'Success',
             data: row
         });
+    });
+});
+
+// DELETE a candidate
+app.delete('/api/candidate/:id', (req, res) => {
+    const sql = `DELETE FROM candidates WHERE id = ?`;
+    const params = [req.params.id];
+
+    db.query(sql, params, (err, result) => {
+        if (err) {
+            res.resultMessage(400).json({ error: res.message });
+        } else if (!result.affectedRows) {
+            // if candidate doesn't exist (affectedRows is null/false)
+            res.json({
+                message: `Candidate not found`
+            });
+        } else {
+            res.json({
+                message: `Deleted`,
+                changes: result.affectedRows,
+                id: req.params.id
+            });
+        }
     });
 });
 
