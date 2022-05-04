@@ -25,7 +25,11 @@ const db = mysql.createConnection(
 
 // return all data from candidates table
 app.get('/api/candidates', (req, res) => {
-    const sql = `SELECT * FROM candidates`;
+    const sql = `SELECT candidates.*, parties.name
+                AS party_name
+                FROM candidates
+                LEFT JOIN parties
+                ON candidates.party_id = parties.id`;
     
     // query() method runs the SQL query and executes the callback with all the resulting rows that match
     db.query(sql, (err, rows) => {
@@ -44,7 +48,12 @@ app.get('/api/candidates', (req, res) => {
 // return single record from candidates table
 app.get('/api/candidate/:id', (req, res) => {
     // ? denotes a placeholder, making this a prepared statement
-    const sql = `SELECT * FROM candidates WHERE id = ?`;
+    const sql = `SELECT candidates.*, parties.name
+                AS party_name
+                FROM candidates
+                LEFT JOIN parties
+                ON candidates.party_id = parties.id
+                WHERE candidates.id = ?`;
     // (param) argument can be an array that holds multiple values for the multiple placeholders
     const params = [req.params.id];
 
